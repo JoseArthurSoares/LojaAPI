@@ -70,3 +70,4 @@ C:\Users\arthu\RiderProjects\LojaAPI\LojaAPI\obj\Debug\net9.0\refint\LojaAPI.dll
 C:\Users\arthu\RiderProjects\LojaAPI\LojaAPI\obj\Debug\net9.0\LojaAPI.pdb
 C:\Users\arthu\RiderProjects\LojaAPI\LojaAPI\obj\Debug\net9.0\LojaAPI.genruntimeconfig.cache
 C:\Users\arthu\RiderProjects\LojaAPI\LojaAPI\obj\Debug\net9.0\ref\LojaAPI.dll
+C:\Users\arthu\RiderProjects\LojaAPI\LojaAPI\obj\Debug\net9.0\LojaAPI.sourcelink.json

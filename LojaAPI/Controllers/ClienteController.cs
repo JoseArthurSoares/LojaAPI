@@ -6,15 +6,8 @@ namespace LojaAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClienteController : ControllerBase
+public class ClienteController(ClienteService clienteService) : ControllerBase
 {
-    private readonly ClienteService clienteService;
-
-    public ClienteController(ClienteService clienteService)
-    {
-        this.clienteService = clienteService;
-    }
-
     // POST: api/cliente
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Cliente cliente)
@@ -55,6 +48,10 @@ public class ClienteController : ControllerBase
         try
         {
             var cliente = await clienteService.ObterPorId(id);
+            if (cliente == null)
+            {
+                return NotFound("Cliente não encontrado.");
+            }
 
             return Ok(cliente);
         }
