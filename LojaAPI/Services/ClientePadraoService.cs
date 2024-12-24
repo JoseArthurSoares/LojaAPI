@@ -4,37 +4,53 @@ using LojaAPI.Repositories;
 namespace LojaAPI.Services;
 
 
-public class ClientePadraoService: ClienteService
+public class ClientePadraoService(IClienteRepository clienteRepository) : ClienteService
 {
-    private readonly IClienteRepository _clienteRepository;
-    
-    public ClientePadraoService(IClienteRepository clienteRepository)
-    {
-        
-    }
-    
     public Task<Cliente> Inserir(Cliente cliente)
     {
-        return _clienteRepository.Inserir(cliente);
+        if (cliente == null)
+        {
+            throw new ArgumentNullException(nameof(cliente), "O cliente não pode ser nulo.");
+        }
+        return clienteRepository.Inserir(cliente);
     }
 
     public Task<IEnumerable<Cliente>> ObterTodos()
     {
-        return _clienteRepository.ObterTodos();
+        return clienteRepository.ObterTodos();
     }
 
     public Task<Cliente?> ObterPorId(int id)
     {
-        return _clienteRepository.ObterPorId(id);
+        var cliente = clienteRepository.ObterPorId(id);
+        if (cliente == null)
+        {
+            throw new KeyNotFoundException("Cliente não encontrado.");
+        }
+
+        return cliente;
     }
 
     public Task<bool> Atualizar(Cliente cliente)
     {
-        return _clienteRepository.Atualizar(cliente);
+        if (clienteRepository.ObterPorId(cliente.ClienteId) == null)
+        {
+            throw new KeyNotFoundException("Cliente não encontrado.");
+        }
+        if (cliente == null)
+        {
+            throw new ArgumentNullException(nameof(cliente), "O cliente não pode ser nulo.");
+        }
+        return clienteRepository.Atualizar(cliente);
     }
 
     public Task<bool> Excluir(int id)
     {
-        return _clienteRepository.Excluir(id);
+        var cliente = clienteRepository.ObterPorId(id);
+        if (cliente == null)
+        {
+            throw new KeyNotFoundException("Cliente não encontrado.");
+        }
+        return clienteRepository.Excluir(id);
     }
 }

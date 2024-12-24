@@ -20,6 +20,12 @@ public class ClienteController(ClienteService clienteService) : ControllerBase
             var clienteCriado = await clienteService.Inserir(cliente);
             return CreatedAtAction(nameof(Get), new { id = clienteCriado.ClienteId }, clienteCriado);
         }
+        
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
         catch (Exception ex)
         {
             return StatusCode(500, "Erro interno do servidor: " + ex.Message);
@@ -48,12 +54,11 @@ public class ClienteController(ClienteService clienteService) : ControllerBase
         try
         {
             var cliente = await clienteService.ObterPorId(id);
-            if (cliente == null)
-            {
-                return NotFound("Cliente não encontrado.");
-            }
-
             return Ok(cliente);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound("Cliente não encontrado.");
         }
         catch (Exception ex)
         {
@@ -70,11 +75,16 @@ public class ClienteController(ClienteService clienteService) : ControllerBase
 
         try
         {
-            var atualizado = await clienteService.Atualizar(cliente);
-            if (!atualizado)
-                return NotFound("Cliente não encontrado.");
-
+            await clienteService.Atualizar(cliente);
             return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound("Cliente não encontrado.");
+        }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
@@ -88,11 +98,12 @@ public class ClienteController(ClienteService clienteService) : ControllerBase
     {
         try
         {
-            var excluido = await clienteService.Excluir(id);
-            if (!excluido)
-                return NotFound("Cliente não encontrado.");
-
+            await clienteService.Excluir(id);
             return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound("Cliente não encontrado.");
         }
         catch (Exception ex)
         {

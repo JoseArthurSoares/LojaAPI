@@ -14,7 +14,8 @@ namespace LojaAPI.Models
         [Required(ErrorMessage = "O e-mail é obrigatório.")]
         [StringLength(40, ErrorMessage = "O nome deve ter no máximo 40 caracteres.")]
         public string Email { get; set; } = string.Empty;
-
+        
+        [Required(ErrorMessage = "O telefone é obrigatório.")]
         [StringLength(11, ErrorMessage = "O nome deve ter no máximo 11 caracteres.")]
         public string Telefone { get; set; } = string.Empty;
     }
