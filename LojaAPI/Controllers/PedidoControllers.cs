@@ -6,15 +6,8 @@ namespace LojaAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PedidoControllers: ControllerBase
+public class PedidoControllers(PedidoService pedidoService) : ControllerBase
 {
-    private readonly PedidoService _pedidoService;
-
-    public PedidoControllers(PedidoService pedidoService)
-    {
-        _pedidoService = pedidoService;
-    }
-
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] Pedido pedido)
     {
@@ -23,8 +16,16 @@ public class PedidoControllers: ControllerBase
 
         try
         {
-            var pedidoCriado = await _pedidoService.Inserir(pedido);
+            var pedidoCriado = await pedidoService.Inserir(pedido);
             return CreatedAtAction(nameof(Get), new { id = pedidoCriado.PedidoId}, pedidoCriado);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
@@ -37,7 +38,7 @@ public class PedidoControllers: ControllerBase
     {
         try
         {
-            var pedidos = await _pedidoService.ObterTodos();
+            var pedidos = await pedidoService.ObterTodos();
             return Ok(pedidos);
         }
         catch (Exception ex)
@@ -51,13 +52,12 @@ public class PedidoControllers: ControllerBase
     {
         try
         {
-            var pedido = await _pedidoService.ObterPorId(id);
-            if (pedido == null)
-            {
-                return NotFound("Pedido não encontrado.");
-            }
-
+            var pedido = await pedidoService.ObterPorId(id);
             return Ok(pedido);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
@@ -73,8 +73,16 @@ public class PedidoControllers: ControllerBase
 
         try
         {
-            await _pedidoService.Atualizar(pedido);
+            await pedidoService.Atualizar(pedido);
             return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
@@ -87,13 +95,12 @@ public class PedidoControllers: ControllerBase
     {
         try
         {
-            var excluido = await _pedidoService.Excluir(id);
-            if (!excluido)
-            {
-                return NotFound("Pedido não encontrado.");
-            }
-
+            await pedidoService.Excluir(id);
             return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {

@@ -3,33 +3,59 @@ using LojaAPI.Repositories;
 
 namespace LojaAPI.Services;
 
-public class PedidoPadraoService
+public class PedidoPadraoService(IPedidoRepository pedidoRepository, IClienteRepository clienteRepository)
 {
-    
-    private readonly IPedidoRepository _pedidoRepository;
-    
     public Task<Pedido> Inserir(Pedido pedido)
     {
-        return this._pedidoRepository.Inserir(pedido);
+        if (pedido == null)
+        {
+            throw new ArgumentNullException(nameof(pedido), "O pedido não pode ser nulo.");
+        }
+
+        if (clienteRepository.ObterPorId(pedido.ClienteId) == null)
+        {
+            throw new KeyNotFoundException("Cliente não encontrado.");
+        }
+        return pedidoRepository.Inserir(pedido);
     }
 
     public Task<IEnumerable<Pedido>> ObterTodos()
     {
-        return this._pedidoRepository.ObterTodos();
+        return pedidoRepository.ObterTodos();
     }
 
     public Task<Pedido?> ObterPorId(int id)
     {
-        return this._pedidoRepository.ObterPorId(id);
+        if (pedidoRepository.ObterPorId(id) == null)
+        {
+            throw new KeyNotFoundException("Pedido não encontrado.");
+        }
+        return pedidoRepository.ObterPorId(id);
     }
 
     public Task<bool> Atualizar(Pedido pedido)
     {
-        return this._pedidoRepository.Atualizar(pedido);
+        if (pedidoRepository.ObterPorId(pedido.PedidoId) == null)
+        {
+            throw new KeyNotFoundException("Pedido não encontrado.");
+        }
+        if (pedido == null)
+        {
+            throw new ArgumentNullException(nameof(pedido), "O pedido não pode ser nulo.");
+        }
+        if (clienteRepository.ObterPorId(pedido.ClienteId) == null)
+        {
+            throw new KeyNotFoundException("Cliente não encontrado.");
+        }
+        return pedidoRepository.Atualizar(pedido);
     }
 
     public Task<bool> Excluir(int id)
     {
-        return this._pedidoRepository.Excluir(id);
+        if (pedidoRepository.ObterPorId(id) == null)
+        {
+            throw new KeyNotFoundException("Pedido não encontrado.");
+        }
+        return pedidoRepository.Excluir(id);
     }
 }
