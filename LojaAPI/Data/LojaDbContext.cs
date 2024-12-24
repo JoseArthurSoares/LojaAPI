@@ -12,4 +12,6 @@ public class LojaDbContext : DbContext
     
     public DbSet<Cliente> Clientes { get; set; }
     public DbSet<Produto> Produtos { get; set; }
+    public DbSet<ItemPedido> ItemPedidos { get; set; }
+    public DbSet<Pedido> Pedidos { get; set; }
 }

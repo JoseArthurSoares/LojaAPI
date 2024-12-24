@@ -3,6 +3,7 @@ using LojaAPI.Repositories;
 
 namespace LojaAPI.Services;
 
+
 public class ClientePadraoService: ClienteService
 {
     private readonly IClienteRepository _clienteRepository;
