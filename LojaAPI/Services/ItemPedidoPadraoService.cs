@@ -51,6 +51,11 @@ public class ItemPedidoPadraoService(
 
     public async Task<bool> Atualizar(ItemPedido itemPedido)
     {
+        if (_itemPedidoRepository.ObterPorId(itemPedido.ItemPedidoId) == null)
+        {
+            throw new KeyNotFoundException("ItemPedido não encontrado.");
+        }
+        
         if (itemPedido == null)
             throw new ArgumentNullException(nameof(itemPedido), "O item do pedido não pode ser nulo.");
 

@@ -21,6 +21,10 @@ public class ProdutoController(ProdutoService produtoService) : ControllerBase
             var produtoCriado = await produtoService.Inserir(produto);
             return CreatedAtAction(nameof(Get), new { id = produtoCriado.ProdutoId }, produtoCriado);
         }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch (Exception ex)
         {
             return StatusCode(500, "Erro interno do servidor: " + ex.Message);
@@ -47,12 +51,11 @@ public class ProdutoController(ProdutoService produtoService) : ControllerBase
         try
         {
             var produto = await produtoService.ObterPorId(id);
-            if (produto == null)
-            {
-                return NotFound("Produto não encontrado.");
-            }
-
             return Ok(produto);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
@@ -69,12 +72,15 @@ public class ProdutoController(ProdutoService produtoService) : ControllerBase
         try
         {
             var produtoAtualizado = await produtoService.Atualizar(produto);
-            if (produtoAtualizado == null)
-            {
-                return NotFound("Produto não encontrado.");
-            }
-
             return Ok(produtoAtualizado);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+        catch (ArgumentNullException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
@@ -87,12 +93,7 @@ public class ProdutoController(ProdutoService produtoService) : ControllerBase
     {
         try
         {
-            var removido = await produtoService.Excluir(id);
-            if (!removido)
-            {
-                return NotFound("Produto não encontrado.");
-            }
-
+            await produtoService.Excluir(id);
             return NoContent();
         }
         catch (Exception ex)

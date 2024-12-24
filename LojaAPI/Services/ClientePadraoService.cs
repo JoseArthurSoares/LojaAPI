@@ -10,7 +10,7 @@ public class ClientePadraoService: ClienteService
     
     public ClientePadraoService(IClienteRepository clienteRepository)
     {
-        _clienteRepository = clienteRepository;
+        
     }
     
     public Task<Cliente> Inserir(Cliente cliente)
