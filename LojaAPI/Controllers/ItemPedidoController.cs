@@ -61,12 +61,11 @@ public class ItemPedidoController(ItemPedidoService itemPedidoService) : Control
         try
         {
             var itemPedido = await itemPedidoService.ObterPorId(id);
-            if (itemPedido == null)
-            {
-                return NotFound("Item do pedido não encontrado.");
-            }
-
             return Ok(itemPedido);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message); 
         }
         catch (Exception ex)
         {
@@ -101,14 +100,12 @@ public class ItemPedidoController(ItemPedidoService itemPedidoService) : Control
     {
         try
         {
-            var itemPedido = await itemPedidoService.ObterPorId(id);
-            if (itemPedido == null)
-            {
-                return NotFound("Item do pedido não encontrado.");
-            }
-
             await itemPedidoService.Excluir(id);
             return Ok("Item do pedido removido com sucesso.");
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
