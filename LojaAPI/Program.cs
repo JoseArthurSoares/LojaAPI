@@ -17,6 +17,8 @@ builder.Services.AddDbContext<LojaDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<ClienteService, ClientePadraoService>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<ProdutoService, ProdutoPadraoService>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 
 
 var app = builder.Build();

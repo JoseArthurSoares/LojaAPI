@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LojaAPI.Repositories;
 
-public class ProdutoRepository
+public class ProdutoRepository : IProdutoRepository
 {
     private readonly LojaDbContext _context;
 
